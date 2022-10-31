@@ -1,0 +1,103 @@
+---
+title: "previewquiz"
+format: html
+editor: visual
+---
+
+## Quarto
+
+Quarto enables you to weave together content and executable code into a finished document. To learn more about Quarto see <https://quarto.org>.
+
+## Running Code
+
+When you click the **Render** button a document will be generated that includes both content and the output of embedded code. You can embed code like this:
+
+```{r}
+library(tidyverse)
+
+```
+
+You can add options to executable code like this
+
+```{r}
+#| echo: false
+cereals_long_unclean <- read_csv(here::here("Week 4","Preview","cereal.csv"))
+
+
+```
+
+The `echo: false` option disables the printing of code (only output is displayed).
+
+```{r}
+cereals_long_clean <- cereals_long_unclean |> 
+  select(name,
+         protein, 
+         fat, 
+         fiber
+         )
+cereals_long <- cereals_long_clean |>
+  pivot_longer(`protein`:`fiber`,
+               names_to = "Nutrient",
+               values_to = "Amount"
+               )
+cereals_long
+```
+
+```{r}
+prof_info <- data.frame(
+  professor = 
+    c("Bodwin", "Glanz", "Carlton", "Sun", "Theobold"),
+  undergrad_school = 
+    c("Harvard", "Cal Poly", "Berkeley", "Harvard", "Colorado Mesa University"),
+  grad_school = 
+    c("UNC", "Boston University", "UCLA", "Stanford", "Montana State University")
+)
+
+prof_course <- data.frame(
+  professor = c("Bodwin", "Glanz", "Carlton", "Theobold"),
+  Stat_331 = c(TRUE, TRUE, TRUE, TRUE),
+  Stat_330 = c(FALSE, TRUE, TRUE, FALSE),
+  Stat_431 = c(TRUE, TRUE, FALSE, TRUE)
+)
+
+course_info <- data.frame(
+  course = c("Stat_331", "Stat_330", "Stat_431"),
+  num_sections = c(8, 3, 1)
+)
+```
+
+```{r}
+merge_a |> 
+  left_join(x = prof_info, 
+            y = prof_course, 
+            by = "professor",
+            na_matches = ''
+            
+            ) 
+merge_a
+
+```
+
+```{r}
+merge_b |> 
+  left_join(x = prof_info, 
+            y = prof_course, 
+            by = "professor"
+            )
+merge_b
+```
+
+```{r}
+prof_clean <- prof_course  |> 
+   pivot_longer(`Stat_331`:`Stat_431`,
+               names_to = "course",
+               values_to = "can_teach"
+               )
+
+merge_c <- prof_clean |> 
+  right_join( course_info, by = "course")
+merge_c
+
+  
+
+```
