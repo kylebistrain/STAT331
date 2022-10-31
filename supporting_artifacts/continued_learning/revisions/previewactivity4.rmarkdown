@@ -1,0 +1,100 @@
+---
+title: "wk4practiceactivity"
+format: html
+editor: visual
+---
+
+
+## Quarto
+
+Quarto enables you to weave together content and executable code into a finished document. To learn more about Quarto see <https://quarto.org>.
+
+## Running Code
+
+When you click the **Render** button a document will be generated that includes both content and the output of embedded code. You can embed code like this:
+
+
+```{r}
+#|messages: false
+library(tidyverse)
+library(readxl)
+library(ggplot2)
+
+```
+
+```{r}
+#|include: false
+military <- readxl::read_xlsx(here::here( "supporting_artifacts", 
+                                          "continued_learning", 
+                                          "revisions",              
+                       "gov_spending_per_capita.xlsx"),
+                      sheet = "Share of Govt. spending", 
+                      skip = 7, 
+                      n_max = 191
+                        )
+
+                      
+
+
+
+
+```
+
+```{r}
+military_clean <- military |> 
+  mutate(across(.cols = everything(), .fns = ~na_if(x = ., 
+                                                    y = ". ."
+                                                    )
+                ),
+         across(.cols = everything(), .fns = ~na_if(x = ., 
+                                                    y = "xxx"
+                                                    )
+                )
+         )
+
+military_clean <- military_clean |> 
+  mutate(across(.cols = `1988`:`2019`, .fns = ~as.numeric(x = .)))
+
+```
+
+
+The `echo: false` option disables the printing of code (only output is displayed).
+
+
+```{r}
+cont_region <- read_xlsx(here::here("supporting_artifacts", 
+                                    "continued_learning", 
+                                    "revisions",  
+                                    "gov_spending_per_capita.xlsx"), 
+                      sheet = "Regional totals", 
+                      skip = 14) |> 
+  filter(Region != "World total (including Iraq)", 
+         Region != "World total (excluding Iraq)")
+
+
+```
+
+```{r}
+military_join_1 <- military_clean |> 
+  anti_join(cont_region, c("Country" = "Region") )
+
+```
+
+```{r}
+
+military_join_2 <- military_join_1 |> 
+  pivot_longer(`1988`:`2019`,
+               values_to = "Spending",
+               names_to = "Year")
+
+```
+
+```{r}
+ggplot(data = military_join_2,
+       mapping = aes(x = Spending, 
+               y = Year
+                     )) + 
+         geom_boxplot()
+       
+```
+

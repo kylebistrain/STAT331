@@ -21,7 +21,13 @@ You can add options to executable code like this
 
 ```{r}
 #| echo: false
-cereals_long_unclean <- read_csv(here::here("Week 4","Preview","cereal.csv"))
+cereals_long_unclean <- read_csv(here::here( "supporting_artifacts", 
+                                            "continued_learning",
+                                            "revisions",
+                                            "preview4",
+                                            "cereal.csv"
+                                            )
+                                 )
 
 
 ```
