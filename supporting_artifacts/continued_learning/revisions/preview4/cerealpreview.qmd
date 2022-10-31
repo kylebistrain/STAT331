@@ -46,7 +46,7 @@ cereals_long <- cereals_long_clean |>
                names_to = "Nutrient",
                values_to = "Amount"
                )
-cereals_long
+
 ```
 
 ```{r}
@@ -80,7 +80,6 @@ merge_a |>
             na_matches = ''
             
             ) 
-merge_a
 
 ```
 
@@ -90,7 +89,7 @@ merge_b |>
             y = prof_course, 
             by = "professor"
             )
-merge_b
+
 ```
 
 ```{r}
@@ -102,7 +101,7 @@ prof_clean <- prof_course  |>
 
 merge_c <- prof_clean |> 
   right_join( course_info, by = "course")
-merge_c
+
 
   
 
