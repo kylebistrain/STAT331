@@ -68,7 +68,6 @@ a.  Male versus Female
       geom_bar(stat = "identity") +
       labs(x = "music genre", 
            y= "average number of artists liked", 
-           title = "the average number of artists participants liked for each genre by sex " 
            )
       
     ```
@@ -105,7 +104,6 @@ ggplot(data = artist_by_ethnic,
   geom_bar(stat = "identity") + 
   labs(x = "music genre", 
        y = "average number of artists liked", 
-       title = "the average number of artists participants liked for each genre by ethnicity" 
        )
 
 ```
