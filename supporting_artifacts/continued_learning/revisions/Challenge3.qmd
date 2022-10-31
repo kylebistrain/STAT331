@@ -10,10 +10,11 @@ editor: visual
 execute:
  echo: true
  error: true
+ messages: false
 ---
 
 ```{r}
-#| message = FALSE
+#| include: false
 library(tidyverse)
 library(ggplot2)
 
@@ -21,9 +22,12 @@ library(ggplot2)
 
 ```{r}
 #| messages: false
+#| warning: false
+#| include: false
 
-hiphop_unclean <- read_csv(here::here("Week 3", 
-                                      "Lab3", 
+hiphop_unclean <- read_csv(here::here("supporting_artifacts",
+                                      "continued_learning",
+                                      "revisions",
                                       "hiphop.csv"
                                       )
                            )
