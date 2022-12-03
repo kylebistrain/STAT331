@@ -1,5 +1,20 @@
 ---
 title: "Lightening Round Essays"
-format: html
-editor: visual
+format: 
+  html:
+    self-contained: true
+execute: 
+  echo: true
+  message: false
+  warning: false
 ---
+
+If Nickzad Bayati doesn't earn an A then nobody should, because he is a really good R and overall programmer. Additionally, he is good at explaining his thought process and teaching me and my group other group members how to approach a problem. I appreciated having him in my group because his explanations were very clear and he was patient even when I or another group member had trouble understanding practice activity problems.
+
+The most difficult part of this class was understanding functions in lab 7. More specifically, I had trouble with the difference between functions that are vectorized and non-vectorized. In my other programming classes, we spent a good portion of time with loops so it seemed odd that you don't need any loops with vectorized functions. Now that I understand the difference, I can see the benefits because the code looks cleaner and is easier to understand.
+
+The easiest part of the class was probably learning how to make graphs with ggplot in lab 2 because I had some prior R knowledge from STAT 301 and STAT 305. This knowledge helped because otherwise, the syntax would have been very confusing to me.
+
+Learning all of the mutating joins was the most interesting part because it was fun merging data sets and figuring out which function to use in each situation. I also think that this skill is super practical because now I can join data sets together if they have a common variable. I want to use this skill in the future to analyze datasets in personal R projects.
+
+My biggest piece of advice for future students is to make sure to spend time with the preview activities and reading the textbook because it will give you a good foundation for the practice activities, labs, and challenges. It will make your class time more productive because you will come into class with a strong understanding. I also advice students to use discord if they are really stuck on problems.
