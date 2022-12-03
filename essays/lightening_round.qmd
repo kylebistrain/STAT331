@@ -1,5 +1,5 @@
 ---
-title: "Lightening Round Essays"
+title: "Lightening Round Essay"
 format: 
   html:
     self-contained: true
