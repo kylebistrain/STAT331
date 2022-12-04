@@ -1,0 +1,231 @@
+---
+title: "Challenge 9: Baby Names"
+author: "Kyle Bistrain"
+format:
+  html:
+    self-contained: true
+    mainfont: Times New Roman
+    code-fold: true
+    code-summary: "show the code"
+editor: visual
+execute:
+ echo: true
+ error: true
+ warning: true
+---
+
+```{r setup}
+#| warning: false
+library(tidyverse)
+library(broom)
+library(knitr)
+library(DT)
+library(kableExtra)
+library(tinytex)
+library(moderndive)
+```
+
+```{r data}
+#| warning: false
+baby_names_data <- read_csv(here::here("supporting_artifacts",
+                               "extended learning",
+                               "StateNames_A.csv"
+                               )
+                    )
+
+baby_names_data |> 
+  datatable()
+
+```
+
+1.  Make a summary table of the number of babies named "Allison" for each state and the sex of the baby. Specifically, each state should be its own row and each sex should have its own column. Additionally, if there were no babies born with the name "Allison" for that combination of year, state, & sex the table should have a value of 0 (not an `NA`).
+
+```{r}
+
+baby_names <- baby_names_data |> 
+  rename(sex_at_birth = `Gender`) |> 
+  filter(`Name` == 'Allison') 
+  
+  baby_names |> 
+  group_by(sex_at_birth,State) |> 
+  summarise(sum = sum(`Count`), .groups = "drop") |> 
+  pivot_wider(names_from = `sex_at_birth`,
+              values_from = `sum`
+              ) |> 
+  mutate(M = coalesce(M, 0)) |> 
+  kable(format = "html",
+        col.names = c("State", 
+                      "Frequency of Babies Sex_at_Birth: F", 
+                      "Frequency of Babies Sex_at_Birth: M"
+                      ),
+        align = "ccc",
+        booktabs = TRUE
+        ) |> 
+    kable_styling(font_size = 12)
+
+  
+  
+```
+
+source: https://sparkbyexamples.com/r-programming/replace-na-values-with-zero-in-r-dataframe/
+
+2.  You should have seen in the table above that "Allison" is a name given overwhelmingly to babies assigned female at birth. So, `filter` the data to include only babies assigned `F`emale at birth.
+
+3.  Make a visualization showing how the popularity of the name "Allison" has changed over the years. To be clear, each year should have **one** observation--the total number of Allisons born that year.
+
+```{r}
+ baby_names <- baby_names|> 
+  filter(`sex_at_birth` != 'M') |> 
+  group_by(Year) |> 
+  summarise(year_count = sum(`Count`), .groups = "drop")
+ baby_names |> 
+  ggplot(mapping = aes(x = Year, y = year_count)) +
+  geom_bar(stat = "identity") +
+  geom_text(aes(label = year_count), color = "blue", vjust=0) +
+  ggtitle("Count of Babies named Allison \n with female sex_at_birth") + 
+  labs(x = "Year", y = "")
+```
+
+## **4 Modeling the Number of Allisons**
+
+4.  Create a linear model with the year as the explanatory variable, and the number of Allisons as the response. Similar to #4, each year should have **one** observation--the total number of Allisons born that year.
+
+    ```{r}
+
+    baby_names_model <- baby_names |> 
+      lm(year_count ~ Year, data = _)
+
+
+
+    ```
+
+5.  Visualize the regression model.
+
+    ```{r}
+    baby_names |> 
+      ggplot(aes(x = Year, y = year_count)) +
+      geom_point() +
+      geom_smooth(formula = y ~ x, method = "lm", se = FALSE) +
+      labs(x = "Year", 
+           y = "") +
+      ggtitle('year_count ') 
+          
+    ```
+
+6.  Write out the estimated regression equation.
+
+    ```{r}
+    get_regression_table(baby_names_model) |> 
+      kable(format = "html")
+
+
+
+    ```
+
+    $$
+    \hat{y} = 209689.761- (101.519*Year)
+    $$
+
+    $$
+    \hat{y} = 
+    $$ predicted number of babies birthed in a year with the name Allison and sex_at_birth Female
+
+7.  Plot the *residuals* of the model, that is, the actual values minus the predicted values. Comment on the residuals - do you see any patterns?\
+
+```{r}
+baby_names_model |> 
+  augment() |> 
+  ggplot(aes(x = Year, y = .resid)) +
+  geom_point() +
+  ggtitle('Residuals') +
+  labs(x = "Year",
+       y = "")
+```
+
+From the graph of the Residuals, I does appears that there is a U type pattern in the graph. This means that the residuals are likely not normally distributed. This does not satisfy the condition and therefore doesn't satisfy all the linear model conditions.
+
+8.  What do you conclude from this model? Is my name not cool anymore?
+
+Therefore, from this model we do not satisfy the normally distributed residuals condition therefore we can't make a conclusion based on our linear model. From early analysis it may appear that the name Allison is becoming less popular over time, we can't make any claims.
+
+## **5 Spelling by State**
+
+In middle school I was **so** upset with my parents for not naming me "Allyson". Past my pre-teen rebellion, I'm happy with my name and am impressed when baristas spell it "Allison" instead of "Alison". But I don't have it as bad as my good friend Allan!
+
+9.  Narrow the A name dataset (downloaded previously) down to only male-assigned babies named "Allan", "Alan", or "Allen". Make a plot comparing the popularity of these names over time.
+
+```{r}
+baby_names_p5 <- baby_names_data |> 
+  rename(sex_at_birth = `Gender`) |> 
+  filter(`Name` %in% c('Allan','Alan','Allen'),
+         `sex_at_birth` != 'F'
+         )
+
+
+  baby_names_p5 |> 
+    group_by(Year,Name) |> 
+    summarise(year_count = sum(`Count`), .groups = "drop") |> 
+    ggplot(aes(x = Year, y = year_count, color = Name)) + 
+    geom_point() +
+    ggtitle('year_count') +
+    labs(x = "Year", y = "")
+  
+
+```
+
+10. In California, Allan's spelling of his name is the least common of the three
+
+-   but perhaps it's not such an unusual name for his home state of Pennsylvania. Compute the total number of babies born with each spelling of "Allan" in 2000, in Pennsylvania and in California. Specifically, each spelling should be its own column and each state should have its own row. Similar to before, a `0` (not an `NA`) should be used to represent locations where there were no instances of these names.
+
+    ```{r}
+    baby_names_p5 |> 
+      filter(`State` %in% c("CA","PA"),
+             `Year` == 2000
+             ) |> 
+      group_by(State,Name) |> 
+      summarise(year_count = sum(`Count`), .groups = "drop") |> 
+      pivot_wider(names_from = `Name`,
+                  values_from = `year_count`
+                  ) |> 
+       kable(format = "html",
+             col.names = c("State", 
+                          "Frequency of Alan",
+                          "Frequency of Allan",
+                          "Frequency of Allen"),
+             align = "ccc",
+             booktabs = TRUE
+             ) |> 
+        kable_styling(font_size = 12)
+    ```
+
+11. Convert your total counts to overall percents. That is, what was the percent breakdown between the three spellings in CA? What about in PA?
+
+```{r}
+baby_names_p5 |> 
+  filter(`State` %in% c("CA","PA"),
+         `Year` == 2000
+         ) |> 
+  group_by(State,Name) |> 
+  summarise(sum_cnt = sum(Count), .groups = "drop") |> 
+  pivot_wider(names_from = `Name`,
+              values_from = `sum_cnt`
+              ) |> 
+  mutate(`row_sum` = `Alan` + `Allan` + `Allen`,
+         `Alan` = (`Alan`/`row_sum`)*100,
+         `Allan` = (`Allan`/`row_sum`)*100,
+         `Allen` = (`Allen`/`row_sum`)*100
+         ) |> 
+  select(-5) |> 
+  kable(format = "html",
+        col.names = c("State", 
+                      "percent named Alan",
+                      "percent named Allan",
+                      "percent named Allen"),
+        align = "ccc",
+        booktabs = TRUE
+        ) |> 
+    kable_styling(font_size = 12)
+  
+```
+
+After producing the table, the births of babies with the name Allan is still the most uncommon in both California and Pennsylvania.

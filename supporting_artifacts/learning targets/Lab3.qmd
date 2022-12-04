@@ -1,0 +1,271 @@
+---
+title: "Lab 3: Hip-Hop Lyrics"
+author: "Kyle Bistrain"
+format:
+  html:
+    self-contained: true
+    mainfont: Times New Roman
+    code-fold: true
+    code-summary: "show the code"
+editor: visual
+execute:
+ echo: true
+ error: true
+---
+
+```{r}
+#| message: false
+library(tidyverse)
+```
+
+```{r}
+#| echo: false
+#| message: false
+hiphop_unclean <- read_csv(here::here("supporting_artifacts", 
+                                      "learning targets", 
+                                      "hiphop.csv"
+                                      )
+                           )
+
+```
+
+#### **1.**
+
+Provide a brief overview (2-4 sentences) of the dataset. (It is always good practice to start an analysis by getting a feel for the data and providing a quick summary for readers.) You do **not** need to show any source code for this question, although you probably want to use code to get some information about the dataset.
+
+**The data set hiphop_unclean from a study on the African-American English dialect. The study was conducted on students enrolled in undergraduate linguistics, sociology, and music classes at the University of Minnesota. The study has 168 participants and each participant was asked to define 64 AAE words. Based on their definition, they were grade on a scale from 1-5. This data was stored in the familiarity column. There is also a binary fam1 variable that codes 0 for a familiarity score of 1 and 1 when familiarity is from 2-5. The data is stored in a tibble with 10752 rows and 38 columns. Each participant was also asked questions about demographics, Social Networking, Music, and pop culture.**
+
+#### **2.**
+
+What are the rows of this dataset? It is **not** one person per row!
+
+**Each row includes the vocabulary word and all of the data associated with the person. Each person or subject is on multiple rows because they have data associated with every vocabulary word. Therefore, there is a lot of demographic data that is repeated in the data set because it stored on every line the subject the subject is stored.**
+
+#### **3.**
+
+Missing values for some of the variables were replaced with other values. How were missing values replaced? What do you believe are some benefits and drawbacks of doing this?
+
+**The missing values were replaced with NA's. A benefit of replacing with NA's is that that no cells in the tibble are empty. One drawback is that you have to use drop_na() if you want to do any computations. This will eliminate any row that has NA and you will lose data from many participants. Another way missing values are coded is by just placing zeros in the columns by default. The benefit is that more cells are filled in and it is easier to compute sums. One downside is that it is confusing on whether the people recording the data wanted the zeros in the dataset.**
+
+**4.**
+
+Clean the dataset in whichever ways you see fit. This might mean adjusting *variable type*, for example from `character` to `factor`, or dealing with missing data.
+
+```{r}
+#| message: false
+hiphop_clean <- 
+  hiphop_unclean |> 
+  mutate(sex = as.factor(sex),
+         age = as.integer(age),
+         county = as.integer(county)
+         )
+
+
+
+
+  
+```
+
+#### **5.**
+
+How many unique AAE words were studied in this dataset?
+
+```{r}
+#| message: false
+distinct(hiphop_clean, word) |> 
+  count() |> 
+  pull()
+
+
+
+
+```
+
+Helpful functions: `distinct()`, `count()`
+
+**There are 64 distinct words**
+
+#### **6.**
+
+Make a new variable that re-categorizes `ethnic` into only two groups, "white" and "non-white", to simplify your data.
+
+Helpful functions: `mutate()`, `if_else()`
+
+```{r}
+#| message: false
+hiphop_clean <- 
+  hiphop_clean |> 
+  mutate(ethnic = 
+            if_else( ethnic != "white",
+                           "non-white",
+                                "white"
+                    )
+         )
+
+
+
+```
+
+#### **7.**
+
+What are the demographics of the people in this study? Investigate the variables `sex`, `age`, and `ethnic` and summarize your findings in 1-3 complete sentences.
+
+*Hint: You'll need to first manipulate your data to have each person represented only once.*
+
+Helpful functions: `select()`, `distinct(___, .keep_all = TRUE)`, `count()`, `summary()`
+
+```{r}
+grouped <- 
+  hiphop_clean |> 
+  distinct(subj, .keep_all = TRUE) |> 
+  select(sex,age,ethnic)
+
+
+group_sex <- 
+  grouped |> 
+  count(sex)
+
+
+
+group_ethnic <- 
+  grouped |> 
+  count(ethnic)
+
+
+```
+
+**In this study, there are 168 participants. There are 117 females and 51 males. Additionally those participants have an ethnic breakdown of 135 whites and 33 non-whites. Also the age of the participants in the study are right skewed with the large majority of the participants are under the age of 20.**
+
+#### **8.**
+
+Make at least two plots to display the demographic information of the subjects in this study. You do not need to discuss these plots, but make sure they are appropriate to the data types and have informative titles and axis labels. Feel free to use the skills you learned in Challenge 3 to enhance your plots!
+
+```{r}
+
+ggplot(data = grouped, 
+       mapping = aes(x = age)
+       ) +
+  geom_histogram(bins = 80) +
+  labs(x = "Age" , 
+       y = "Count", 
+       )
+ggplot(data = group_ethnic, 
+       mapping = aes(x = ethnic,
+                     y = n
+                     )
+       ) +
+  geom_bar(stat = 'identity') +
+  labs(x = "Ethnicity", 
+       y= "Counts", 
+       )
+
+
+ggplot(data = group_sex, 
+       mapping = aes(x = sex, 
+                     y = n,
+                     )
+       ) + 
+  geom_bar(stat = 'identity') +
+  labs(x = "Sex", 
+       y = "Counts", 
+       )
+
+
+
+```
+
+### **Familiar words**
+
+For each demographic group listed below, determine which word(s) in this study was(were) the most **and** least familiar on average.
+
+a.  People below the age of 20
+
+b.  Non-white women
+
+c.  White men above the age of 30
+
+Helpful functions: `filter()`, `group_by()`, `summarize()`, `slice_max()`, `slice_min()`
+
+```{r}
+a <- 
+  hiphop_clean |> 
+  filter(age < 20) |> 
+  group_by(word) |> 
+  summarize(mean = mean(familiarity))
+
+a_min <- a |> 
+  slice_min(mean)
+
+
+a_max <- a |> 
+  slice_max(mean)
+
+
+
+```
+
+**(a) The most familiar word for people below the age of 20 is "feel me".**
+
+**The least familiar word for people below the age of 20 is "The Nation".**
+
+```{r}
+b <- hiphop_clean |> 
+  filter(sex == "Female", 
+         ethnic == "non-white"
+         ) |> 
+  group_by(word) |> 
+  summarize(mean = mean(familiarity))
+
+
+b_min <- b |> 
+  slice_min(mean)
+
+b_max <- b |> 
+  slice_max(mean)
+
+
+
+  
+```
+
+**(b) The most familiar word for non-white Females is "what it do".**
+
+**The least familiar word for non-white Females is a tie between "break someone out","dollar cab", "domino", "dukey rope", "plex", "rollie", and "The Nation".**
+
+```{r}
+c <- hiphop_clean |> 
+  filter(sex == "Male", age > 30) 
+  
+
+c_max <- c |> 
+  slice_max(familiarity)
+
+c_min <- c |> 
+  slice_min(familiarity)
+
+```
+
+**(c)**
+
+**This filters the data set down to one participant p38.**
+
+**The most familiar word for white males above 30 is "5-0", "hard", and "make it rain".**
+
+**The least familiar word for white males above 30 is a tie between 59 words.**
+
+```{r}
+hiphop_clean |> 
+  filter(17 <= age,
+         23 >= age ,
+         city >= 10000,
+         city <= 60000,
+         ethnic == "white",
+         sex == "Male"
+         ) |> 
+  slice_max(popularityScore) |> 
+  slice_max(bieber)
+```
+
+**Based on my filters, I think that Justin Bieber is participant p17.**
+
+\*\*Revisions: Through this revision process I started by reading the survey description and I wrote more information on the study. Originally I did not talk about how the vocabulary words were scored and where the study was conducted. I ended up fixing the description. Another mistake I made originally was filtering out all of the subjects with NA's. This was a mistake because it drops all the columns with NA's and it turns out that all subjects have an ethnicity. To correct this error, I did not drop any columns and I first sorted by distinct subject to get all the subjects demographic data. Then I passed all this information into the graphs and I updated the demographic information. I also decided to describe the distribution for ages because I was missing that in my original description. One issue I am still having is that all the males over the age of 30 only have white ethnicity. Also, another change that I made was changing the binwidth to make it more clear where the distribution of ages were. \*\*

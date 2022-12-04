@@ -1,0 +1,137 @@
+---
+title: "regression"
+author: "Kyle Bistrain"
+format:
+  html:
+    self-contained: true
+    mainfont: Times New Roman
+editor: visual
+execute:
+ echo: true
+ error: true
+ warning: true
+---
+
+```{r}
+#| warning: false
+library(tidyverse)
+library(broom)
+
+```
+
+1\.
+
+```{r}
+#| warning: false
+save <- read.csv(here::here('supporting_artifacts', 
+                           'learning targets', 
+                           'mystery_animal.csv'
+                           )
+                 )
+```
+
+2\.
+
+```{r}
+
+save |> 
+  lm(weight_after ~ weight_before, data = _) |> 
+  augment() |> 
+  ggplot(aes(x = weight_before, y = .resid)) +
+  geom_point()
+
+
+```
+
+3\.
+
+```{r}
+
+trumpet <- runif(100,1.5,3.5)
+qunif(p = .95, min = 1.5, max = 3.5 )
+```
+
+-   4.What is the 95th percentile for trumpet weight?
+
+-   5.What is the 10th percentile for trombone weight?
+
+    ```{r}
+    qnorm(p =.1, mean =  4.6,sd= .8)
+
+    ```
+
+-   6.About what percent of trombones do you expect to be more than 5 pounds?
+
+    ```{r}
+    1- pnorm(5, mean = 4.6, sd = .8)
+    ```
+
+-   7.About what percent of reed instruments do you expect to be more than 5 pounds?
+
+    ```{r}
+    1-pchisq(5, df = 4 )
+    ```
+
+-   8.Simulate 100 random trombone weights. How many of them were below 4 pounds?
+
+```{r}
+a <- rnorm(n =100, mean = 4.6, sd = .8)
+
+sum (a < 4 )
+```
+
+# **3 Catching a Con**
+
+You manage to intercept a shipping notice for delivery to Professor Hill. It says the following:
+
+    Wells Fargo Shipment 1957
+
+    To:  Harold Hill, Mason City, Iowa
+    From:  Music Factory, Gary, Indiana
+
+    Items included:
+        Trombones: 76
+        Cornets: 110
+        Saxophones: 542
+        Clarinets: 318
+        Bassoons: 175
+        
+    Total Shipped Weight: 4532 lbs.
+
+This is your chance to catch Professor Hill in his lie!
+
+First, write a function that samples the correct number of weights of trombones, cornets (trumpets), and reed instruments (saxophones, clarinets, bassoons), and then returns the total weight of the shipment.
+
+Then, use that function to create random samples of the total weight of 1000 possible shipments.
+
+(Some code is provided for you below. Do not change the seed!)
+
+How many of these samples had a weight less than Prof. Hill's shipment? Do you believe Professor Hill is lying, or not?
+
+```{r}
+
+
+music_man <- function(n_tromb, n_cor, n_reed){
+  
+  trombones <- rnorm(n = n_tromb, mean = 4.6, sd = .8)
+  cornets <- runif(n = n_cor, min = 1.5, max = 3.5)
+  reeds <- rchisq(n = n_reed, df = 4)
+  
+  return(sum(trombones,cornets,reeds))
+  
+}
+
+set.seed(1957)
+
+my_weights <- rerun(.n = 1000, 
+                    music_man(n_tromb = 76,n_cor =  110, n_reed = 1035)
+                    ) |> 
+  flatten_dbl()
+
+```
+
+```{r}
+sum(my_weights<4532)
+```
+
+He is lying because only 7 shipments are less than 4532 pounds. therefore there is a low probability of this occuring. 7/1000 = .007. aproximate p-value of .007

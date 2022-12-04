@@ -1,0 +1,245 @@
+---
+title: "Lab 4: Millennials & Avocados"
+author: "Kyle Bistrain"
+format:
+  html:
+    self-contained: true
+    mainfont: Times New Roman
+    code-fold: true
+    code-summary: "show the code"
+editor: visual
+execute:
+ echo: true
+ error: false
+---
+
+```{r}
+#| warning: false
+library(tidyverse)
+library(dplyr)
+```
+
+```{r }
+#| warning: false
+avocado_unclean <- read_csv(here::here('supporting_artifacts',
+                                       'learning targets',
+                                       'avocado.csv'
+                                       )
+                            )
+
+```
+
+**1.** Briefly describe the dataset. What information does it contain?
+
+**This dataset contains weekly retail scan data for National retail volume (units) and price of Avocados. There are three different types of avocados small hass, large hass, and xlarge Hass. These avocado types are represented in as a double. There are also 54 different regions differing in size of region covered. For example, SanFrancisco vs TotalUS.**
+
+**2.** Clean the data in any way you see fit. In particular, look carefully at the `region` variable. Notice that the category `"LosAngeles"` is contained in `"California"`, which is contained in `"West"`, which is contained in `"TotalUS"`. Think about how you want to handle this issue in your analysis.
+
+```{r}
+avocado_unclean <- 
+  avocado_unclean |> 
+  rename(small_hass = `4046`, 
+         large_hass = `4225`, 
+         xlarge_Hass = `4770`
+         )  
+```
+
+```{r}
+avocado_unclean <- 
+  avocado_unclean |> 
+  filter(!region == 'TotalUS') 
+
+
+major_region_label <- data.frame(region = c('West',
+                                            'Northeast',
+                                            'Southeast', 
+                                            'SouthCentral', 
+                                            'Midsouth', 
+                                            'GreatLakes', 
+                                            'Plains', 
+                                            'WestTexNewMexico',
+                                            'SouthCentral'
+                                            )
+                                 ) 
+major_region <- 
+  avocado_unclean |> 
+  semi_join(major_region_label, 
+            by = "region"
+            )
+
+
+states_label <- data.frame(region = c('NewYork',
+                                      'California',
+                                      'SouthCarolina'
+                                      )
+                           )
+state_region_label <- rbind(major_region_label,states_label)
+
+  
+metro_area <-
+  avocado_unclean |> 
+  anti_join(state_region_label, 
+            by = "region"
+            )
+
+
+california_label <- 
+  data.frame(region = c('LosAngeles',
+                        'SanDiego',
+                        'Sacramento',
+                        'SanFrancisco'
+                        )
+             )
+
+california_area <- 
+  avocado_unclean |> 
+  semi_join(california_label, 
+            by = "region"
+            )
+
+
+```
+
+------------------------------------------------------------------------
+
+# **3 Exercises**
+
+**3.** Which major region sold the most organic, small Hass avocados in 2017?
+
+```{r}
+
+major_region <-
+  major_region |> 
+  separate(col = Date,
+           into = c('year',
+                    'month',
+                    'day'
+                    ), 
+           sep = '-'
+           ) 
+
+  major_region |> 
+  filter(type == 'organic', year == 2017) |> 
+  group_by(region) |> 
+  summarize(sum = sum(small_hass)) |>
+  slice_max(sum)
+
+```
+
+**The West region sold the most organic, small Hass avocados in 2017. The region sold 1870206 avocados**.
+
+**4.** Use the `separate()` function to split the `Date` variable into year, month, and day. In which month is the highest volume of avocado sales?
+
+```{r}
+  major_region |> 
+  group_by(month) |> 
+  summarise(sum = sum(`Total Volume`)) |> 
+  slice_max(sum)
+  
+
+
+```
+
+**The highest volume of avocado sales occurred in the month of February. There were 560773120 avocados.**
+
+**5.** Which metro area regions sold the most total avocados? Plot side-by-side boxplots of total volume for only the five regions with the highest averages for the `Total Volume` variable.
+
+```{r}
+
+metro_area_total <-
+  metro_area |>
+  group_by(region) |> 
+  summarise(mean = mean(`Total Volume`)) |> 
+  slice_max(order_by = mean, n = 5)
+metro_area_total
+
+metro_area_total <-
+  metro_area |> 
+  filter(region %in% metro_area_total$region) |> 
+  group_by(region) 
+
+ 
+
+ggplot(data = metro_area_total, 
+       aes(x = region, 
+           y = `Total Volume` ,
+           )
+       ) +
+ geom_boxplot() +
+      labs(x = "Metro area region", 
+           y = "Weekly Total Avocado Volume"
+           ) +
+      geom_jitter(color = "blue", 
+                  size = 1, 
+                  alpha = 0.9
+                  ) 
+
+```
+
+------------------------------------------------------------------------
+
+# **4 Reshaping**
+
+The following four California regions are in this dataset: `"LosAngeles"`, `"SanDiego"`, `"Sacramento"`, and `"SanFrancisco"`. Answer the following questions about these California regions **only**.
+
+**6.** In which regions is the price of organic versus conventional avocados most different? Support your answer with a few summary statistics and a visualization.
+
+```{r}
+  california_area |> 
+  group_by(region,type) |> 
+  summarise(across(.cols = c(`AveragePrice`),
+                   .fns = mean,
+                   na.rm = TRUE
+                   ),
+            .groups = "drop"
+            ) |> 
+    pivot_wider(names_from = `type`,
+                values_from = `AveragePrice`
+                )
+
+ggplot(data = california_area,
+       aes(y = `AveragePrice`, x = `region`,fill = `type`)) +
+  geom_boxplot() +
+  labs(x = "Region", y = "") +
+  ggtitle("Average Price")
+  
+```
+
+**In San Francisco the price between organic and conventional avocados is most different. The price difference is about \$0.81. The second biggest price difference between organic and conventional is about \$0.67 in Sacramento.**
+
+**7.** The following plot shows, for all four California regions, the proportion of the mean Hass avocado sales that are small, large, or extra large; conventional vs. organic. Recreate the plot.
+
+*Hint: This will require restructuring of your data!*
+
+```{r}
+
+california_area_three <-
+  california_area |>
+  mutate(sumtot = `small_hass` + `large_hass`+ `xlarge_Hass`,
+         Small = `small_hass`/sumtot,
+         Large = `large_hass`/sumtot,
+         Extra_Large = `xlarge_Hass`/sumtot
+         ) |> 
+  pivot_longer(cols = `Small`:`Extra_Large`, 
+               values_to = "prop",
+               names_to = "Avocado Size"
+               ) 
+  
+ggplot(data = california_area_three,
+       aes(y = prop, 
+           x = region, 
+           fill = `Avocado Size`
+           )
+       ) + 
+  geom_col(position = "fill") + 
+  labs(x = "Region of CA", y = "Proportion of Mean Avocados Sold") +
+  facet_wrap(~type) +
+  scale_x_discrete(guide = guide_axis(n.dodge = 2)) 
+  
+  
+   
+```
+
+**Source for overlapping x axis labels:** https://datavizpyr.com/how-to-dodge-overlapping-text-on-x-axis-labels-in-ggplot2/
+
+**\*\*Revisions: In this revision process, I learned a lot about quarto document formating. I decided to use warnings: false instead of making messages false. I also changed the way I created datasets by using an anti_join instead of a semi join. This process was a lot easier than doing a semi-join because It required fewer inputs into the data frame. I also used the rbind() function to combine major regions and states into one data frame. Another revision I was using the slice_max function to select the top 5 means. Additionally, I used %in% instead of == to check over regions. I also decided to use a pivot wider to reformat my organic vs region table to display the average prices. Finally, I plotted with a boxplot instead of the histogram because it gives the viewer a better idea of the distribution. Overall, I found the revisions very beneficial and feel more comfortable with the functions I used in this lab.\*\***
