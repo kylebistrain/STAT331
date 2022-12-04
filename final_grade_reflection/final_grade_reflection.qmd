@@ -20,7 +20,7 @@ WD-3 Lab 3 #5 using the distinct function and Lab 9 #2 using the filter function
 
 WD-4 Lab 3 #4 using mutate to modify variable types and Lab 7 \# 2 for modifying existing variables.
 
-WD-5 
+WD-5 cerealpreview.qmd #4 and #5 right join
 
 WD-6 Lab 4 \# 2 using semi_join and anti_join 
 
@@ -64,15 +64,19 @@ Over the course of this class, I submitted a revision for every single assignmen
 
 **Extending Thinking:**
 
-I also tried my hardest to push myself on every challenge assignment. Every opportunity I had, I chose to complete the most difficult challenge. One challenge that I had the most trouble with was figuring out how to use the latex language. I struggled for an hour or so to figure out the right syntax. I am glad that I learned how to make an equation with the latex language because I can use this in the future in implement functions and other complex math symbols into my R code. Another challenge assignment that I had fun with was the lab 2 challenge because I got to customize my color palate.
+I also tried my hardest to push myself on every challenge assignment. Every opportunity I had, I chose to complete the most difficult challenge. One challenge that I had the most trouble with was figuring out how to use the latex language. I struggled for an hour or so to figure out the right syntax. I am glad that I learned how to make an equation with the latex language because I can use this in the future in implement functions and other complex math symbols into my R code. Another challenge assignment that I had fun with was the lab 2 challenge because I got to customize my color palate. Another challenge assignment that I did well on was Challenge assignment 3. I used proper statistical language to
 
 **Collaborative Group Member:**
 
  As far as group work, I feel that I am a contributing team member because I collaborated well with my team over the course of the quarter. We also had each others contacts in case we have trouble on practice activities. I really enjoyed the group working environment. I also made to sure to prepare for class and always stay on top of the new material. Also, occasionally group members from other groups join our table. and It was nice to collaborate with other classmates. I also like that our group is very friendly and we are not afraid or shy to collaborate.
 
-Peer Review:
+**Peer Review:**
 
-This is the one area that I think I could improve on. I did not peer review people's code every week when I was behind on assignments. During the weeks that I submitted labs and challenges on time I gave people code reviews. Also, when I gave people code reviews I tried to give kind, but honest advice to help classmates improve their assignments.
+This is the one area that I think I could improve on. If I completed my assignments earlier I could have completed more peer reviews. Since I turned in some assignments late, canvas did not assign me a peer to review. I did not peer review people's code every week when I was behind on assignments. During the weeks that I submitted labs and challenges on time I gave people code reviews. Also, when I gave people code reviews I tried to give kind, but honest advice to help classmates improve their assignments.
+
+**Additional Area for grading:**
+
+Im not sure if this counts for anything in your grade consideration, but I was present to class every day during the quarter except for the one Thursday that I was traveling for Nationals. I made it a priority to make it class and try my absolute hardest!
 
 \
 

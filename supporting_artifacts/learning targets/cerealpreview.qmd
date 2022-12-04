@@ -1,18 +1,21 @@
 ---
-title: "previewquiz"
-format: html
+title: "previewactivity4"
+author: "Kyle Bistrain"
+format:
+  html:
+    self-contained: true
+    mainfont: Times New Roman
+    code-fold: true
+    code-summary: "show the code"
 editor: visual
+execute:
+ echo: true
+ message: false
+ warning: false
 ---
 
-## Quarto
-
-Quarto enables you to weave together content and executable code into a finished document. To learn more about Quarto see <https://quarto.org>.
-
-## Running Code
-
-When you click the **Render** button a document will be generated that includes both content and the output of embedded code. You can embed code like this:
-
 ```{r}
+#| warning: false
 library(tidyverse)
 
 ```
@@ -20,19 +23,13 @@ library(tidyverse)
 You can add options to executable code like this
 
 ```{r}
-#| echo: false
-cereals_long_unclean <- read_csv(here::here( "supporting_artifacts", 
-                                            "continued_learning",
-                                            "revisions",
-                                            "preview4",
-                                            "cereal.csv"
-                                            )
-                                 )
+#| warning: false
+cereals_long_unclean <- read_csv(here::here("supporting_artifacts","learning targets","cereal.csv"))
 
 
 ```
 
-The `echo: false` option disables the printing of code (only output is displayed).
+1\.
 
 ```{r}
 cereals_long_clean <- cereals_long_unclean |> 
@@ -46,8 +43,10 @@ cereals_long <- cereals_long_clean |>
                names_to = "Nutrient",
                values_to = "Amount"
                )
-
+cereals_long
 ```
+
+2\.
 
 ```{r}
 prof_info <- data.frame(
@@ -72,16 +71,20 @@ course_info <- data.frame(
 )
 ```
 
+3\.
+
 ```{r}
 merge_a |> 
   left_join(x = prof_info, 
             y = prof_course, 
-            by = "professor",
-            na_matches = ''
+            by = "professor"
             
             ) 
 
+
 ```
+
+4
 
 ```{r}
 merge_b |> 
@@ -92,6 +95,8 @@ merge_b |>
 
 ```
 
+5
+
 ```{r}
 prof_clean <- prof_course  |> 
    pivot_longer(`Stat_331`:`Stat_431`,
@@ -101,7 +106,7 @@ prof_clean <- prof_course  |>
 
 merge_c <- prof_clean |> 
   right_join( course_info, by = "course")
-
+merge_c
 
   
 
