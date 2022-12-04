@@ -1,0 +1,71 @@
+---
+title: "Preview 9"
+author: "Kyle Bistrain"
+format:
+  html:
+    self-contained: true
+    mainfont: Times New Roman
+    code-fold: true
+    code-summary: "show the code"
+editor: visual
+execute:
+ echo: true
+ error: true
+ warning: true
+---
+
+```{r}
+#warning: false
+library(palmerpenguins)
+
+library(moderndive)
+library(tidyverse)
+```
+
+1\.
+
+```{r}
+penguins %>%
+  ggplot(aes(x = bill_depth_mm, y = bill_length_mm, color = species)) +
+  geom_point() +
+  stat_smooth(method = "lm") + 
+  labs(x = "Bill Depth (mm)", 
+       y = "Bill Length (mm)")
+```
+
+```{r}
+my_model_2 <- penguins %>%
+  lm(bill_length_mm ~ bill_depth_mm*species, data = .)
+my_model_2
+```
+
+You can add options to executable code like this
+
+```{r}
+#| echo: false
+2 * 2
+```
+
+The `echo: false` option disables the printing of code (only output is displayed).
+
+```{r}
+fake_data <- tibble(
+  height = rnorm(n = 100, mean = 67, sd = 3),
+  age = runif(n = 100, min = 15, max = 75),
+  measure = rbinom(n = 100, size = 1, prob = .6)
+                    ) |> 
+  mutate(
+    supports_measure_A = ifelse(measure == 1,"yes", "No" )
+  )
+  
+```
+
+```{r}
+fake_data |> 
+  ggplot(aes(x = height)) +
+  stat_function(fun = ~dnorm(.x, mean = 67, sd = 3),
+                col = "cornflowerblue", lwd = 2) +
+  stat_function(fun = ~dnorm(.x, mean = 67, sd = 2),
+                col = "deeppink", lwd = 2) 
+  
+```
