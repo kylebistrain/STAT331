@@ -1,5 +1,16 @@
 ---
 title: "The Power of Efficiency"
-format: html
-editor: visual
+format: 
+  html:
+    self-contained: true
+execute: 
+  echo: true
+  message: false
+  warning: false
 ---
+
+In this class, efficiency is vital in creating a program that is. I would define efficiency as the speed at which the program runs. From a computer science perspective, it is the time complexity, but in the scope of STAT 331, it is writing code that does not repeat itself and requires the least number of computer operations. When statistical code is used large datasets, programming efficiency becomes more critical because computing power is expensive at large scales. That's why even minor improvements in efficiency can save companies millions of dollars. One place where I made a conscious effort to improve efficiency was in lab 7, question #4, when I made the rescale_01 function. I decided to save the range function as a variable and index it in my later steps to compute the numerator and the denominator. Before doing so, I repeated the max and made the computer do extra calculations.
+
+  Another assignment where I had an ah-ha moment was in lab 4, question #3. Originally, I tried to create a data frame by using a semi_join function with a data frame and included all of the metro areas in the data frame. To make my program more efficient, I made a data frame with the three states and did an anti_join instead of a semi_join. This is more efficient because I didn't have to find every metro area and include it in the data frame. I realized that it is important to carefully select mutating join functions because some functions are more efficient for certain situations.
+
+  In Lab 9, I realized that I repeated code twice. For questions one and three, I was filtering for babies with the name Allison and renaming the column to Gender. To remove repetition, I created an intermediate variable that includes the data frame with Allison and the renamed column, so I didn't need two filter calls and two rename calls. The name of the intermediate call was baby_names. In the submission of Lab 9, I made this change to eliminate repetition. Overall, writing efficient code is vital to being a data scientist and it is important to remember to revise and optimize code from a time complexity perspective.
