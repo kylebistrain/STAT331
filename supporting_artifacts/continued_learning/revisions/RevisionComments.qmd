@@ -1,0 +1,31 @@
+---
+title: "revisions"
+format:
+  html:
+    self-contained: true
+editor: visual
+---
+
+Comments Challenge 3
+
+For bar plots, you want to `fill` the bars with color! To do this you use the `fill` aesthetic rather than the `color` aesthetic.
+
+This is an exciting way to think of this problem! What did you find? Which genres are the most different for these groups?
+
+Challenge 3:
+
+**Revision: After reading the submission comments, I realized that I need to stop putting message = FALSE inside the curly brackets. While this is a simple fix, I need to make sure I don't make that mistake again. Another mistake I made in my quarto document was using color and instead of the fill option. Color only recolored the outside of my histogram boxes while the fill option fills in the histogram. After making the adjustment, It made my histogram a lot easier to read and made it more visually pleasing. Additionally, on my original submission I did not summarize and make conclusions based on the data set. Even though the data is not survey was not ethical and accurate, I still found an interesting result and need to formalize that result in words. On future assignments, I need to make sure to summarize my graphical results in words. From this flawed data set, I found that on average women listen to more musical artists than men across all genres in this study. And people who's ethnicity is non-white on average listen to more artists than people who are ethnicity is white across all genres in this study.**
+
+Lab 4 comments:
+
+In the lab instructions, I said to **not** type out the metro areas, as there are far more than you\'ve included. It is far simpler to make two dataframes of the regions and states that **are not** cities and use antijoins to remove them from a metro area dataset.
+
+Do you need to create the `major_region_organic` object? In this class, we use the `|>` to take a dataframe and select the maximum, not `$`s. Is there a function you can pipe your data into that will slice the maximum value?
+
+You found a pipeable function! But, there is a more efficient option, which eliminates the `arrange()` step. Can you find it?
+
+You found the top 5 regions and their names are stored in a dataframe. You should use this dataframe to filter the values you want. Moreover, the `==` operator does not work for a vector of names, only one name.
+
+**\*\*Revisions: In this revision process, I learned a lot about quarto document formating. I decided to use warnings: false instead of making messages false. I also changed the way I created datasets by using an anti_join instead of a semi join. This process was a lot easier than doing a semi-join because It required fewer inputs into the data frame. I also used the rbind() function to combine major regions and states into one data frame. Another revision I was using the slice_max function to select the top 5 means. Additionally, I used %in% instead of == to check over regions. I also decided to use a pivot wider to reformat my organic vs region table to display the average prices. Finally, I plotted with a boxplot instead of the histogram because it gives the viewer a better idea of the distribution. Overall, I found the revisions very beneficial and feel more comfortable with the functions I used in this lab.\*\***
+
+
