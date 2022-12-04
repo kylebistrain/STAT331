@@ -33,7 +33,7 @@ R-3 Lab 7 #5 uses stopifnot to make sure the function is robust and has the prop
 
 DVS-1 Lab 5 #2  has boxplots with jitters and Lab #5 use geom_line
 
-DVS-2 Lab 9 #3 I used a geom_text label to label each bar
+DVS-2 challenge 9 #3 I used a geom_text label to label each bar
 
 DVS-3 Lab 7 #6 I made two graphs side by side with grid.arrange
 
