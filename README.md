@@ -1,14 +1,16 @@
 
 
-### Demonstration of Learning Targets
-preview activity 4
-Regression
-Lab 3
-Lab 5
-Lab 7 
-Lab 8
-Preview9
-cerealpreview
+How To access the R projects, follow the instructions below!!!
+1. Click on the supporting artifacts folder to find projects!
+2. select a project
+- preview activity 4
+- Regression Lab
+- Lab 3
+- Lab 5
+- Lab 7 
+- Lab 8
+- Preview9
+- cerealpreview
 
 
 ### Demonstration of Continued Learning
