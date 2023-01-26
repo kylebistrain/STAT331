@@ -2,7 +2,7 @@
 
 How To access the R projects, follow the instructions below!!!
 1. Click on the supporting artifacts folder to find projects!
-2. select a project
+2. Select a project from the list below.
 - preview activity 4
 - Regression Lab
 - Lab 3
