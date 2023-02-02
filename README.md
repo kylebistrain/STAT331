@@ -20,6 +20,4 @@ Challenge 9
 #### Revising My Thinking
 Revision Comments
 
-#### Extending My Thinking
 
-### Growth as a Team Member
